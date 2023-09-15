@@ -54,14 +54,13 @@ namespace Fiap.Web.Donation1.Controllers
             //Consultar o banco de dados;
 
             //TempData["Produtos"] = produtos;
-            ViewBag.Produtos = produtos;
-            return View();
+            return View(produtos);
         }
 
         [HttpGet]
         public IActionResult Novo()
         {
-            return View();
+            return View(new ProdutoModel());
         }
 
         [HttpPost]
@@ -69,13 +68,59 @@ namespace Fiap.Web.Donation1.Controllers
         {
             //Gravando no banco de dados
 
+            //INSERT INTO PRODUTO VALUES
 
             // ViewBag.Produtos = produtos;
 
-            TempData["Mensagem"] = $"{produtoModel.Nome} cadastrado com sucesso";
-            //ViewBag.Mensagem = $"{produtoModel.Nome} cadastrado com sucesso";
-            
-            return RedirectToAction("Index"); 
+            if (string.IsNullOrEmpty(produtoModel.Nome))
+            {
+                ViewBag.Mensagem = "O campo nome é requerido";
+                return View(produtoModel);
+            }
+            else
+            {
+                //UPDATE
+
+                // ViewBag.Produtos = produtos;
+
+                TempData["Mensagem"] = $"{produtoModel.Nome} cadastrado com sucesso";
+                //ViewBag.Mensagem = $"{produtoModel.Nome} cadastrado com sucesso";
+
+                return RedirectToAction("Index");
+
+            }
+        }
+
+        [HttpGet]
+        public IActionResult Editar(int id)
+        {
+            //SELECT * FROM produto where ProdutoId = {id}
+
+            var produto = produtos[id - 1];
+
+            return View(produto);
+        }
+
+        [HttpPost]
+        public IActionResult Editar(ProdutoModel produtoModel)
+        {
+            if (string.IsNullOrEmpty(produtoModel.Nome))
+            {
+                ViewBag.Mensagem = "O campo nome é requerido";
+                return View(produtoModel);
+            }
+            else
+            {
+                //UPDATE
+
+                // ViewBag.Produtos = produtos;
+
+                TempData["Mensagem"] = $"{produtoModel.Nome} alterado com sucesso";
+                //ViewBag.Mensagem = $"{produtoModel.Nome} cadastrado com sucesso";
+
+                return RedirectToAction("Index");
+
+            }
         }
     }
 }
